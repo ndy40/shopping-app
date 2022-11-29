@@ -4,6 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+django = "~=4.1"
+djangorestframework = "~=3.14.0"
+djangorestframework-simplejwt = {version = "~=5.2.2", extras = ["crypto"]}
+pygments = "*"
+markdown = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
