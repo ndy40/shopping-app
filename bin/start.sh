@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
-if [[ ! -d 'tmp' ]]; then
-  mkdir tmp
-fi
+#if [[ ! -d 'tmp' ]]; then
+#  mkdir -p tmp
+#fi
 
-if [[ "$APP_ENV" != 'dev' && ! -d  "shopping_app/tmp/db.shopping_app.sqlite3" ]]; then
-  touch shopping_app/tmp/db.shopping_app.sqlite3
-fi
+#if [[ "$APP_ENV" != 'dev' && ! -d  "shopping_app/tmp/db.shopping_app.sqlite3" ]]; then
+#  touch shopping_app/tmp/db.shopping_app.sqlite3
+#fi
 
 cd shopping_app
 
