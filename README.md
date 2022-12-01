@@ -1,2 +1,2 @@
 # shopping-app
-shopping app based off DRF 
+shopping app based off DRF

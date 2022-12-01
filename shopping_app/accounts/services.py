@@ -14,16 +14,14 @@ def create_user(input_params: RegisterUserInput):
     except User.DoesNotExist:
         params = asdict(input_params)
 
-        if 'password' not in params:
-            raise ValueError('Password must be provided.')
+        if "password" not in params:
+            raise ValueError("Password must be provided.")
 
-        password = params['password']
+        password = params["password"]
 
-        del params['password']
+        del params["password"]
 
-        user = User.objects.create(
-            **asdict(input_params)
-        )
+        user = User.objects.create(**asdict(input_params))
 
         user.set_password(password)
         user.save()
