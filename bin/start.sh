@@ -1,12 +1,15 @@
 #!/usr/bin/env sh
 
-#if [[ ! -d 'tmp' ]]; then
-#  mkdir -p tmp
-#fi
+APP_ENV="${APP_ENV:-dev}"
 
-#if [[ "$APP_ENV" != 'dev' && ! -d  "shopping_app/tmp/db.shopping_app.sqlite3" ]]; then
-#  touch shopping_app/tmp/db.shopping_app.sqlite3
-#fi
+if [[ -x "$(command -v docker)" &&"$APP_ENV" = 'dev' ]]; then
+  echo 'Starting mailhog server in docker'
+  docker run -it -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
+  echo << EMAIL
+    EMAIL HOST: 127.0.0.1
+    EMAIL PORT: 1025
+EMAIL
+fi
 
 cd shopping_app
 

@@ -1,9 +1,13 @@
+import logging
+
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers, validators
-
 from .models import RegisterUserInput
 from .services import create_user
+
+
+_logger = logging.getLogger(__package__)
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -24,4 +28,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         data = RegisterUserInput(**validated_data)
-        return create_user(data)
+        user = create_user(data)
+        _logger.info(f"Created new user {validated_data['email']}")
+        return user
