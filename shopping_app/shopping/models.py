@@ -32,6 +32,10 @@ class ShoppingList(models.Model):
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    @property
+    def title(self):
+        return f"Shopping List {self.created_at.strftime('%Y %B %d')}"
+
 
 class ShoppingItem(models.Model):
     name = models.CharField(null=False, max_length=255)
