@@ -30,7 +30,12 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-LOCAL_APPS = ["accounts", "api", "shopping"]
+LOCAL_APPS = [
+    "accounts",
+    "api",
+    "shopping",
+    "shared",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
