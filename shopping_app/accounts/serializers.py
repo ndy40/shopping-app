@@ -1,9 +1,8 @@
 import logging
 
-from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers, validators
-from .models import RegisterUserInput
+from .models import RegisterUserInput, User
 from .services import create_user
 
 
@@ -22,7 +21,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "first_name", "last_name", "username", "password")
+        fields = ("email", "first_name", "last_name", "password")
         extra_kwargs = {
             "first_name": {"required": True},
             "last_name": {"required": True},

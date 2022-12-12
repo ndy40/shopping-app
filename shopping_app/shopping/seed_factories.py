@@ -1,9 +1,8 @@
 import random
 
-from django.contrib.auth.models import User
 import factory.django
-from django.apps import AppConfig
 
+from accounts.models import User
 from accounts.seed_factories import UserFactory
 from shopping.models import ShoppingList, ShoppingItem, ShoppingListStatus
 

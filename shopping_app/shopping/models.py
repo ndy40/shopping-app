@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+
+from accounts.models import User
+
 
 # Create your models here.
 
@@ -30,7 +32,7 @@ class ShoppingList(models.Model):
         default=ShoppingListStatus.DRAFT,
         null=True,
     )
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     @property
     def title(self):
@@ -50,5 +52,5 @@ class ShoppingItem(models.Model):
         default=ShoppingItemStatus.UNPICKED,
     )
     shopping_list = models.ForeignKey(
-        ShoppingList, on_delete=models.CASCADE, related_name="shopping_list", null=True
+        ShoppingList, on_delete=models.CASCADE, related_name="shopping_items", null=True
     )
