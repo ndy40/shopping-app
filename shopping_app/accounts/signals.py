@@ -9,3 +9,9 @@ from .services import get_user_shopping_permisisons
 def add_default_user_permissions(_, instance: User, **kwargs):
     instance.user_permissions_set.add(get_user_shopping_permisisons())
     instance.save()
+
+
+# TODO:
+# 1. Add User created signal for sending email.
+# 2. Add signal for password reset email.
+# 3. Add password resend email signal

@@ -787,10 +787,10 @@ class ShoppingItemFactory(factory.django.DjangoModelFactory):
 
     name = factory.LazyFunction(lambda: random.choice(FOOD_ITEMS))
     shopping_list = factory.SubFactory(ShoppingListFactory)
+    quantity = 1
 
 
 def run(_, *args, **kwargs):
     for user in User.objects.all():
-        print(f"Generating list for user - {user.get_full_name()}")
         shopping_list = ShoppingListFactory(owner=user)
         ShoppingItemFactory(shopping_list=shopping_list)

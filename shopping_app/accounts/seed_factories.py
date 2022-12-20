@@ -23,7 +23,6 @@ class UserFactory(factory.django.DjangoModelFactory):
     def add_default_permissions(obj: User, create, extracted, **kwargs):
         if create:
             for permission in services.get_user_shopping_permisisons():
-                print(f"... Permission {permission}")
                 obj.user_permissions.add(permission)
 
 

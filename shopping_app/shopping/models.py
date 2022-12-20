@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from rest_framework.reverse import reverse
 
 from accounts.models import User
 
@@ -54,3 +55,10 @@ class ShoppingItem(models.Model):
     shopping_list = models.ForeignKey(
         ShoppingList, on_delete=models.CASCADE, related_name="shopping_items", null=True
     )
+
+    @property
+    def resource_link(self):
+        return reverse(
+            "shopping_app.api:shopping_app.shopping:shopping_item",
+            kwargs={"pk": self.id},
+        )
