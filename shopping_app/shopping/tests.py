@@ -3,10 +3,9 @@ import json
 from django.urls import reverse
 from jsonschema import validate
 from rest_framework import status
-from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
-
-from shopping import views
+from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 from shared import test_utils
+from shopping import views
 
 # Create your tests here.
 
@@ -202,6 +201,74 @@ class ShoppingListTests(APITestCase):
         assert patch_resp.data["shopping_items"][1]["quantity"] == 4
         assert patch_resp.data["shopping_items"][1]["name"] == "item02"
 
-    # TODO:
-    # 3. Add test to delete a single item from shopping list
-    # 4. Add test to completely empty shopping list - shopping_list/{id}/empty
+    def test_delete_shopping_item_from_shopping_list(self):
+        data = {
+            "status": "DRAFT",
+            "shopping_items": [
+                {
+                    "name": "item01",
+                },
+                {"name": "item02"},
+                {"name": "item03"},
+            ],
+        }
+        requests = self.factory.post(
+            reverse("api:shopping_list:shopping_lists_collection"), data
+        )
+        force_authenticate(requests, user=self.user)
+
+        # Action
+        response = views.GetShoppingCollectionView.as_view()(requests)
+        shopping_list_id = response.data["id"]
+        item_id = response.data["shopping_items"][0]["id"]
+        first_item_url = reverse(
+            "shopping_app.api:shopping_app.shopping:shopping_item",
+            kwargs={"pk": item_id},
+        )
+
+        request = self.factory.delete(first_item_url)
+        force_authenticate(request, user=self.user)
+        response = views.ShoppingItemView.as_view()(request, pk=item_id)
+        assert response.status_code == status.HTTP_204_NO_CONTENT, response.data
+
+        request = self.factory.get(
+            reverse(
+                "shopping_app.api:shopping_list:shopping_list_item",
+                kwargs={"pk": shopping_list_id},
+            )
+        )
+        force_authenticate(request, user=self.user)
+        response = views.GetShoppingListItemView.as_view()(request, pk=shopping_list_id)
+
+        assert len(response.data["shopping_items"]) == 2
+
+    def test_empty_shopping_list_succeeds(self):
+        data = {
+            "status": "DRAFT",
+            "shopping_items": [
+                {
+                    "name": "item01",
+                },
+                {"name": "item02"},
+                {"name": "item03"},
+            ],
+        }
+        requests = self.factory.post(
+            reverse("api:shopping_list:shopping_lists_collection"), data
+        )
+        force_authenticate(requests, user=self.user)
+
+        # Action
+        response = views.GetShoppingCollectionView.as_view()(requests)
+        shopping_list_id = response.data["id"]
+
+        requests = self.factory.delete(
+            reverse(
+                "shopping_app.api:shopping_app.shopping:empty_shopping_list",
+                kwargs={"pk": shopping_list_id},
+            )
+        )
+        force_authenticate(requests, user=self.user)
+        resp = views.EmptyShoppingListView.as_view()(requests, pk=shopping_list_id)
+
+        assert resp.status_code == status.HTTP_204_NO_CONTENT, resp.data

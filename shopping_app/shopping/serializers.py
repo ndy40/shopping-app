@@ -1,13 +1,11 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from .models import ShoppingList, ShoppingItem
+from .models import ShoppingItem, ShoppingList
 
 
 class ShoppingItemSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
-
-    resource_link = serializers.URLField(required=False, read_only=True)
 
     class Meta:
         model = ShoppingItem
