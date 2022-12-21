@@ -33,6 +33,10 @@ class ShoppingList(models.Model):
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
+    shared_with = models.ManyToManyField(
+        User, related_name="shared_with", through="SharedWith"
+    )
+
     @property
     def title(self):
         return f"Shopping List {self.created_at.strftime('%Y %B %d')}"
@@ -53,3 +57,16 @@ class ShoppingItem(models.Model):
     shopping_list = models.ForeignKey(
         ShoppingList, on_delete=models.CASCADE, related_name="shopping_items", null=True
     )
+
+
+class SharedWith(models.Model):
+    shopping_list = models.ForeignKey(ShoppingList, on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=("shopping_list", "shared_with"),
+                name="unq_shopping_list_shared_with",
+            )
+        ]
