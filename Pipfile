@@ -10,6 +10,9 @@ djangorestframework-simplejwt = {version = "~=5.2.2", extras = ["crypto"]}
 pygments = "*"
 markdown = "*"
 drf-yasg = "*"
+django-eventstream = "*"
+channels = "~=3.0.0"
+channels-redis = '==4.0.0'
 
 [dev-packages]
 pre-commit = "2.20.0"

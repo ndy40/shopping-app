@@ -21,4 +21,5 @@ urlpatterns = [
         name="empty_shopping_list",
     ),
     path("item/<int:pk>/", views.ShoppingItemView.as_view(), name="shopping_item"),
+    path("views/", views.view_page),
 ]

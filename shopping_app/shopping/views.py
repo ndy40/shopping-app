@@ -1,19 +1,18 @@
-from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404, render
 from rest_framework import status
-
-from rest_framework.response import Response
 from rest_framework.generics import (
-    ListCreateAPIView,
-    RetrieveUpdateAPIView,
     DestroyAPIView,
+    ListCreateAPIView,
     RetrieveDestroyAPIView,
+    RetrieveUpdateAPIView,
 )
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
-from .models import ShoppingList, ShoppingItem
+from .models import ShoppingItem, ShoppingList
 from .serializers import ShoppingListSerializer
-
 
 # Create your views here.
 
@@ -55,3 +54,7 @@ class EmptyShoppingListView(DestroyAPIView):
 class ShoppingItemView(RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = ShoppingItem.objects.all()
+
+
+def view_page(request):
+    return render(request, "shopping/index.html", {})
