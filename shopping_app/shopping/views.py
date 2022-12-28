@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework import status
@@ -17,19 +18,22 @@ from .serializers import ShoppingItemSerializer, ShoppingListSerializer
 # Create your views here.
 
 
-class GetShoppingCollectionView(ListCreateAPIView):
+class ShoppingCollectionView(ListCreateAPIView):
     serializer_class = ShoppingListSerializer
     permission_classes = [IsAuthenticated, DjangoModelPermissions]
 
     def get_queryset(self):
-        return ShoppingList.objects.filter(owner=self.request.user)
+        return ShoppingList.objects.filter(
+            Q(owner=self.request.user)
+            | Q(shared_with__shared_with__shared_with=self.request.user)
+        )
 
     def perform_create(self, serializer: Serializer):
         serializer.validated_data["owner"] = self.request.user
         return super().perform_create(serializer)
 
 
-class GetShoppingListItemView(RetrieveUpdateAPIView, DestroyAPIView):
+class ShoppingListItemView(RetrieveUpdateAPIView, DestroyAPIView):
     serializer_class = ShoppingListSerializer
     permission_classes = [IsAuthenticated, DjangoModelPermissions]
 

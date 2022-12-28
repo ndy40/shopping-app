@@ -53,7 +53,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(request, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(request)
+        response = views.ShoppingCollectionView.as_view()(request)
 
         # Assert
         assert response.status_code == status.HTTP_200_OK, response.content
@@ -73,7 +73,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(request, user=self.user)
 
         # Action
-        response = views.GetShoppingListItemView.as_view()(
+        response = views.ShoppingListItemView.as_view()(
             request, pk=self.shopping_list.id
         )
 
@@ -89,7 +89,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(request, user=self.user)
 
         # Action
-        response = views.GetShoppingListItemView.as_view()(request, pk=100)
+        response = views.ShoppingListItemView.as_view()(request, pk=100)
 
         # Assert
         assert response.status_code == status.HTTP_404_NOT_FOUND, response.data
@@ -105,7 +105,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
 
         # Assert
         assert response.status_code == status.HTTP_201_CREATED
@@ -125,7 +125,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
 
         # Assert
         assert response.status_code == status.HTTP_201_CREATED
@@ -147,7 +147,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
 
         patch_data = {"shopping_items": [{"name": "item02"}]}
         pk = response.data["id"]
@@ -156,7 +156,7 @@ class ShoppingListTests(APITestCase):
             patch_data,
         )
         force_authenticate(requests, user=self.user)
-        patch_resp = views.GetShoppingListItemView.as_view()(requests, pk=pk)
+        patch_resp = views.ShoppingListItemView.as_view()(requests, pk=pk)
         patch_resp.render()
 
         assert patch_resp.status_code == status.HTTP_200_OK, patch_resp.content
@@ -177,7 +177,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
 
         shopping_item = response.data["shopping_items"][0]
 
@@ -193,7 +193,7 @@ class ShoppingListTests(APITestCase):
             patch_data,
         )
         force_authenticate(requests, user=self.user)
-        patch_resp = views.GetShoppingListItemView.as_view()(requests, pk=pk)
+        patch_resp = views.ShoppingListItemView.as_view()(requests, pk=pk)
         patch_resp.render()
 
         assert patch_resp.status_code == status.HTTP_200_OK, patch_resp.content
@@ -220,7 +220,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
         shopping_list_id = response.data["id"]
         item_id = response.data["shopping_items"][0]["id"]
         first_item_url = reverse(
@@ -240,7 +240,7 @@ class ShoppingListTests(APITestCase):
             )
         )
         force_authenticate(request, user=self.user)
-        response = views.GetShoppingListItemView.as_view()(request, pk=shopping_list_id)
+        response = views.ShoppingListItemView.as_view()(request, pk=shopping_list_id)
 
         assert len(response.data["shopping_items"]) == 2
 
@@ -261,7 +261,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
         shopping_list_id = response.data["id"]
 
         requests = self.factory.delete(
@@ -293,7 +293,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
         response.render()
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST, response.content
@@ -316,7 +316,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
         pk = response.data["id"]
 
         patch_data = {"shopping_items": [{"name": "item02"}]}
@@ -326,7 +326,7 @@ class ShoppingListTests(APITestCase):
             patch_data,
         )
         force_authenticate(requests, user=self.user)
-        patch_resp = views.GetShoppingListItemView.as_view()(requests, pk=pk)
+        patch_resp = views.ShoppingListItemView.as_view()(requests, pk=pk)
         patch_resp.render()
 
         assert patch_resp.status_code == status.HTTP_400_BAD_REQUEST, (
@@ -352,7 +352,7 @@ class ShoppingListTests(APITestCase):
         force_authenticate(requests, user=self.user)
 
         # Action
-        response = views.GetShoppingCollectionView.as_view()(requests)
+        response = views.ShoppingCollectionView.as_view()(requests)
         pk = response.data["id"]
         first_item = response.data["shopping_items"][0]
 
@@ -363,7 +363,7 @@ class ShoppingListTests(APITestCase):
             patch_data,
         )
         force_authenticate(requests, user=self.user)
-        patch_resp = views.GetShoppingListItemView.as_view()(requests, pk=pk)
+        patch_resp = views.ShoppingListItemView.as_view()(requests, pk=pk)
         patch_resp.render()
 
         assert patch_resp.status_code == status.HTTP_400_BAD_REQUEST, (

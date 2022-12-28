@@ -42,6 +42,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
             "shopping_items",
             "sub_channel",
             "shared_with",
+            "owner_id",
         ]
 
     def create(self, validated_data):
