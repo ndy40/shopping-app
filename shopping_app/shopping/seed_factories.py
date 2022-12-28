@@ -1,10 +1,9 @@
 import random
 
 import factory.django
-
 from accounts.models import User
 from accounts.seed_factories import UserFactory
-from shopping.models import ShoppingList, ShoppingItem, ShoppingListStatus
+from shopping.models import SharedWith, ShoppingItem, ShoppingList, ShoppingListStatus
 
 # depends on account
 deps = [
@@ -790,7 +789,26 @@ class ShoppingItemFactory(factory.django.DjangoModelFactory):
     quantity = 1
 
 
-def run(_, *args, **kwargs):
+class SharedWithFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = SharedWith
+
+    shopping_list = factory.SubFactory(ShoppingListFactory)
+    shared_with = factory.SubFactory(UserFactory)
+
+
+def _create_users_with_shopping_list():
     for user in User.objects.all():
         shopping_list = ShoppingListFactory(owner=user)
         ShoppingItemFactory(shopping_list=shopping_list)
+
+
+def _create_shopping_lists_with_collabs():
+    for user in User.objects.all().order_by("-id")[:2]:
+        shared_with = SharedWithFactory(shared_with=user)
+        ShoppingItemFactory(shopping_list=shared_with.shopping_list)
+
+
+def run(_, *args, **kwargs):
+    _create_users_with_shopping_list()
+    _create_shopping_lists_with_collabs()
