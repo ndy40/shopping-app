@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
 from .models import ShoppingItem, ShoppingList
-from .serializers import ShoppingListSerializer
+from .serializers import ShoppingItemSerializer, ShoppingListSerializer
 
 # Create your views here.
 
@@ -54,6 +54,7 @@ class EmptyShoppingListView(DestroyAPIView):
 class ShoppingItemView(RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = ShoppingItem.objects.all()
+    serializer_class = ShoppingItemSerializer
 
 
 def view_page(request):

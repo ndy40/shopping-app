@@ -7,13 +7,18 @@
     <title>JS Bin</title>
 </head>
 <body>
-<h1>Hello</h1>
+<ul id="content"></ul>
 <script type="text/javascript">
-    let socket = new WebSocket(`ws://${window.location.host}/events/`);
+    let socket = new WebSocket(`ws://${window.location.host}/ws/shopping_list/ae831ace-cdd6-48cd-806f-b19a5be85a60/`);
 
+    let content = document.querySelector('ul#content');
+    let codeElement = document.createElement('code')
 
     socket.onmessage = (evt) => {
-        console.log("Message from server", evt.data);
+        codeElement.innerText = evt.data;
+        let li = document.createElement('li')
+        li.innerText = codeElement.innerHTML;
+        content.appendChild(li);
     };
 
     socket.onerror = (evt) => {

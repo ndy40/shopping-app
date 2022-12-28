@@ -197,9 +197,11 @@ class ShoppingListTests(APITestCase):
         patch_resp.render()
 
         assert patch_resp.status_code == status.HTTP_200_OK, patch_resp.content
-        assert patch_resp.data["shopping_items"][0]["quantity"] == 2
-        assert patch_resp.data["shopping_items"][1]["quantity"] == 4
-        assert patch_resp.data["shopping_items"][1]["name"] == "item02"
+        assert patch_resp.data["shopping_items"][0]["quantity"] == 2, patch_resp.content
+        assert patch_resp.data["shopping_items"][1]["quantity"] == 4, patch_resp.content
+        assert (
+            patch_resp.data["shopping_items"][1]["name"] == "item02"
+        ), patch_resp.content
 
     def test_delete_shopping_item_from_shopping_list(self):
         data = {

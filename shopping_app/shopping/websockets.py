@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from asgiref.sync import async_to_sync
@@ -7,34 +8,46 @@ from shopping.models import ShoppingList
 from shopping.serializers import ShoppingListSerializer
 
 
-class HelloConsumer(WebsocketConsumer):
+class ShoppingListConsumer(WebsocketConsumer):
+    list_name = None
+
     def connect(self):
-        self.room_name = "test"
+        try:
+            shopping_list = self._get_shopping_list(self._get_shopping_channel())
+            self.list_name = f"channel_{shopping_list.sub_channel}"
 
-        async_to_sync(self.channel_layer.group_add)(self.room_name, self.channel_name)
-
-        self.accept()
+            async_to_sync(self.channel_layer.group_add)(
+                self.list_name, self.channel_name
+            )
+            self.accept()
+        except ShoppingList.DoesNotExist:
+            self.close()
 
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_name, self.channel_name
+            self.list_name, self.channel_name
         )
 
     def receive(self, text_data=None, bytes_data=None):
-        print(text_data)
-        data = json.loads(text_data)
         async_to_sync(self.channel_layer.group_send)(
-            self.room_name, {"type": "shopping_evt", "data": data["shopping_list"]}
+            self.list_name,
+            {"type": "shopping.list.update", "data": self._get_shopping_channel()},
         )
 
-    def shopping_evt(self, event):
-        print("event here")
-        shopping_list = ShoppingList.objects.get(pk=event["data"])
+    def shopping_list_update(self, event):
+        print("sending update....")
+        shopping_list = ShoppingList.objects.get(sub_channel=event["data"])
         self.send(
             text_data=json.dumps({"data": ShoppingListSerializer(shopping_list).data})
         )
 
+    def _get_shopping_channel(self):
+        return self.scope["url_route"]["kwargs"].get("sub_channel")
+
+    def _get_shopping_list(self, sub_channel):
+        return ShoppingList.objects.get(sub_channel=sub_channel)
+
 
 websocket_urlpatterns = [
-    path("events/", HelloConsumer.as_asgi()),
+    path("ws/shopping_list/<str:sub_channel>/", ShoppingListConsumer.as_asgi()),
 ]
