@@ -49,6 +49,9 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
         if shopping_items:
             for item in shopping_items:
+                if "name" in item:
+                    self._validate_duplicate_shopping_items(instance.id, item)
+
                 if "id" in item:
                     item_id = item.pop("id")
                     ShoppingItem.objects.filter(pk=item_id).update(**item)
@@ -59,3 +62,25 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
         updated_shopping_list.refresh_from_db()
         return updated_shopping_list
+
+    def _validate_duplicate_shopping_items(self, instance_id: int, item: dict):
+        if ShoppingItem.objects.filter(
+            shopping_list_id=instance_id, name=item["name"]
+        ).exists():
+            raise serializers.ValidationError(f'Item already exists {item["name"]}')
+
+        return True
+
+    def validate_shopping_items(self, value):
+        found = set()
+        for item in value:
+            line_item = dict(item)
+            if "name" in line_item:
+                if line_item["name"] in found:
+                    raise serializers.ValidationError(
+                        f"Duplicate shopping items {line_item['name']}"
+                    )
+
+                found.add(line_item["name"])
+
+        return value
