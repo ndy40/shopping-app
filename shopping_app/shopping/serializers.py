@@ -1,3 +1,4 @@
+from accounts.models import User
 from rest_framework import serializers
 
 from .models import ShoppingItem, ShoppingList
@@ -13,14 +14,35 @@ class ShoppingItemSerializer(serializers.ModelSerializer):
         exclude = ("shopping_list",)
 
 
+class SharedWithSerializer(serializers.ModelSerializer):
+
+    full_name = serializers.CharField(source="get_full_name")
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "full_name",
+            "first_name",
+            "last_name",
+        ]
+
+
 class ShoppingListSerializer(serializers.ModelSerializer):
     shopping_items = ShoppingItemSerializer(many=True, required=False)
-
     sub_channel = serializers.UUIDField(read_only=True)
+    shared_with = SharedWithSerializer(many=True, required=False, read_only=True)
 
     class Meta:
         model = ShoppingList
-        fields = ["id", "title", "status", "shopping_items", "sub_channel"]
+        fields = [
+            "id",
+            "title",
+            "status",
+            "shopping_items",
+            "sub_channel",
+            "shared_with",
+        ]
 
     def create(self, validated_data):
         shopping_items = None
