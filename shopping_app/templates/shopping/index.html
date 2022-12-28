@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+</head>
+<body>
+<ul id="content"></ul>
+<script type="text/javascript">
+    let socket = new WebSocket(`ws://${window.location.host}/ws/shopping_list/ae831ace-cdd6-48cd-806f-b19a5be85a60/`);
+
+    let content = document.querySelector('ul#content');
+    let codeElement = document.createElement('code')
+
+    socket.onmessage = (evt) => {
+        codeElement.innerText = evt.data;
+        let li = document.createElement('li')
+        li.innerText = codeElement.innerHTML;
+        content.appendChild(li);
+    };
+
+    socket.onerror = (evt) => {
+        console.log(evt);
+    }
+
+    socket.onclose = (evt) => {
+        console.log('Server is closed')
+    };
+
+    socket.onopen = (evt) => {
+        socket.send(JSON.stringify({'shopping_list': 17}));
+    }
+
+</script>
+</body>
+</html>

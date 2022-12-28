@@ -11,14 +11,15 @@ urlpatterns = [
         name="shopping_lists_collection",
     ),
     path(
-        "<int:pk>/",
-        views.GetShoppingListItemView.as_view(),
-        name="shopping_list_item",
-    ),
-    path(
         "<int:pk>/empty/",
         views.EmptyShoppingListView.as_view(),
         name="empty_shopping_list",
     ),
+    path(
+        "<int:pk>/",
+        views.GetShoppingListItemView.as_view(),
+        name="shopping_list_item",
+    ),
     path("item/<int:pk>/", views.ShoppingItemView.as_view(), name="shopping_item"),
+    path("views/", views.view_page),
 ]
