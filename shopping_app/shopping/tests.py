@@ -274,3 +274,99 @@ class ShoppingListTests(APITestCase):
         resp = views.EmptyShoppingListView.as_view()(requests, pk=shopping_list_id)
 
         assert resp.status_code == status.HTTP_204_NO_CONTENT, resp.data
+
+    def test_when_duplicate_shopping_item_is_added_then_post_returns_400_bad_request_response(
+        self,
+    ):
+        data = {
+            "status": "DRAFT",
+            "shopping_items": [
+                {
+                    "name": "item01",
+                },
+                {"name": "item01"},
+            ],
+        }
+        requests = self.factory.post(
+            reverse("api:shopping_list:shopping_lists_collection"), data
+        )
+        force_authenticate(requests, user=self.user)
+
+        # Action
+        response = views.GetShoppingCollectionView.as_view()(requests)
+        response.render()
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST, response.content
+
+    def test_when_duplicate_shopping_item_is_added_then_patch_returns_400_bad_request_response(
+        self,
+    ):
+        data = {
+            "status": "DRAFT",
+            "shopping_items": [
+                {
+                    "name": "item01",
+                },
+                {"name": "item02"},
+            ],
+        }
+        requests = self.factory.post(
+            reverse("api:shopping_list:shopping_lists_collection"), data
+        )
+        force_authenticate(requests, user=self.user)
+
+        # Action
+        response = views.GetShoppingCollectionView.as_view()(requests)
+        pk = response.data["id"]
+
+        patch_data = {"shopping_items": [{"name": "item02"}]}
+
+        requests = self.factory.patch(
+            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": pk}),
+            patch_data,
+        )
+        force_authenticate(requests, user=self.user)
+        patch_resp = views.GetShoppingListItemView.as_view()(requests, pk=pk)
+        patch_resp.render()
+
+        assert patch_resp.status_code == status.HTTP_400_BAD_REQUEST, (
+            patch_resp.status_code,
+            patch_resp.content,
+        )
+
+    def test_when_shopping_item_is_renamed_to_an_existing_items_name_patch_returns_400_bad_request_response(
+        self,
+    ):
+        data = {
+            "status": "DRAFT",
+            "shopping_items": [
+                {
+                    "name": "item01",
+                },
+                {"name": "item02"},
+            ],
+        }
+        requests = self.factory.post(
+            reverse("api:shopping_list:shopping_lists_collection"), data
+        )
+        force_authenticate(requests, user=self.user)
+
+        # Action
+        response = views.GetShoppingCollectionView.as_view()(requests)
+        pk = response.data["id"]
+        first_item = response.data["shopping_items"][0]
+
+        patch_data = {"shopping_items": [{"id": first_item["id"], "name": "item02"}]}
+
+        requests = self.factory.patch(
+            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": pk}),
+            patch_data,
+        )
+        force_authenticate(requests, user=self.user)
+        patch_resp = views.GetShoppingListItemView.as_view()(requests, pk=pk)
+        patch_resp.render()
+
+        assert patch_resp.status_code == status.HTTP_400_BAD_REQUEST, (
+            patch_resp.status_code,
+            patch_resp.content,
+        )
