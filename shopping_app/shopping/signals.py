@@ -2,6 +2,7 @@ import os
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from shopping.models import ShoppingList
@@ -9,7 +10,7 @@ from shopping.models import ShoppingList
 
 @receiver(post_save, sender=ShoppingList)
 def publish_shopping_list_updates(sender, instance, **kwargs):
-    if os.environ["DISABLE_SIGNALS"]:
+    if settings.DISABLE_SIGNALS:
         return
 
     channel_layer = get_channel_layer()

@@ -13,6 +13,8 @@ import os.path
 from datetime import timedelta
 from pathlib import Path
 
+from django.utils.log import DEFAULT_LOGGING
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -167,3 +169,7 @@ CHANNEL_LAYERS = {
         },
     }
 }
+
+DISABLE_SIGNALS = bool(os.environ.get("DISABLE_SIGNALS", 1))
+
+LOGGING = DEFAULT_LOGGING
