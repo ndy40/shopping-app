@@ -62,7 +62,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         shopping_items = None
-        print("val data", validated_data)
+
         if "shopping_items" in validated_data:
             shopping_items = validated_data.pop(
                 "shopping_items", instance.shopping_items

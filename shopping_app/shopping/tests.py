@@ -1,11 +1,11 @@
-import json
-
+from accounts.seed_factories import UserFactory
 from django.urls import reverse
 from jsonschema import validate
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 from shared import test_utils
 from shopping import views
+from shopping.seed_factories import SharedWithFactory, ShoppingListFactory
 
 # Create your tests here.
 
@@ -38,6 +38,10 @@ SHOPPING_LIST_SCHEMA = {
 
 ARRAY_OF_SHOPPING_LISTS_SCHEMA = {"type": "array", "items": SHOPPING_LIST_SCHEMA}
 
+SHOPPING_LIST_ITEM_ROUTE = "api:shopping_list:shopping_list_item"
+SHOPPING_LIST_COLLECTION_ROUTE = "api:shopping_list:shopping_lists_collection"
+SHOPPING_LIST_ITEM_EMPTY = "api:shopping_list:empty_shopping_list"
+
 
 class ShoppingListTests(APITestCase):
     def setUp(self) -> None:
@@ -49,7 +53,7 @@ class ShoppingListTests(APITestCase):
 
     def test_fetching_shopping_lists_for_user(self):
         # Configure
-        request = self.factory.get("/api/shopping_lists/")
+        request = self.factory.get(reverse(SHOPPING_LIST_COLLECTION_ROUTE))
         force_authenticate(request, user=self.user)
 
         # Action
@@ -66,7 +70,7 @@ class ShoppingListTests(APITestCase):
         # Configure
         request = self.factory.get(
             reverse(
-                "api:shopping_list:shopping_list_item",
+                SHOPPING_LIST_ITEM_ROUTE,
                 kwargs={"pk": self.shopping_list.id},
             )
         )
@@ -84,7 +88,7 @@ class ShoppingListTests(APITestCase):
     def test_fetching_shopping_list_item_not_belonging_to_user_returns_404(self):
         # Configure
         request = self.factory.get(
-            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": 100})
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": 100})
         )
         force_authenticate(request, user=self.user)
 
@@ -99,9 +103,7 @@ class ShoppingListTests(APITestCase):
     ):
         # configure
         data = {"status": "DRAFT"}
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -119,9 +121,7 @@ class ShoppingListTests(APITestCase):
                 }
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -141,9 +141,7 @@ class ShoppingListTests(APITestCase):
                 }
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -152,7 +150,7 @@ class ShoppingListTests(APITestCase):
         patch_data = {"shopping_items": [{"name": "item02"}]}
         pk = response.data["id"]
         requests = self.factory.patch(
-            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": pk}),
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": pk}),
             patch_data,
         )
         force_authenticate(requests, user=self.user)
@@ -171,9 +169,7 @@ class ShoppingListTests(APITestCase):
                 }
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -189,7 +185,7 @@ class ShoppingListTests(APITestCase):
         }
         pk = response.data["id"]
         requests = self.factory.patch(
-            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": pk}),
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": pk}),
             patch_data,
         )
         force_authenticate(requests, user=self.user)
@@ -214,9 +210,7 @@ class ShoppingListTests(APITestCase):
                 {"name": "item03"},
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -255,9 +249,7 @@ class ShoppingListTests(APITestCase):
                 {"name": "item03"},
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -287,9 +279,7 @@ class ShoppingListTests(APITestCase):
                 {"name": "item01"},
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -310,9 +300,7 @@ class ShoppingListTests(APITestCase):
                 {"name": "item02"},
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -322,7 +310,7 @@ class ShoppingListTests(APITestCase):
         patch_data = {"shopping_items": [{"name": "item02"}]}
 
         requests = self.factory.patch(
-            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": pk}),
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": pk}),
             patch_data,
         )
         force_authenticate(requests, user=self.user)
@@ -346,9 +334,7 @@ class ShoppingListTests(APITestCase):
                 {"name": "item02"},
             ],
         }
-        requests = self.factory.post(
-            reverse("api:shopping_list:shopping_lists_collection"), data
-        )
+        requests = self.factory.post(reverse(SHOPPING_LIST_COLLECTION_ROUTE), data)
         force_authenticate(requests, user=self.user)
 
         # Action
@@ -359,7 +345,7 @@ class ShoppingListTests(APITestCase):
         patch_data = {"shopping_items": [{"id": first_item["id"], "name": "item02"}]}
 
         requests = self.factory.patch(
-            reverse("api:shopping_list:shopping_list_item", kwargs={"pk": pk}),
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": pk}),
             patch_data,
         )
         force_authenticate(requests, user=self.user)
@@ -369,4 +355,152 @@ class ShoppingListTests(APITestCase):
         assert patch_resp.status_code == status.HTTP_400_BAD_REQUEST, (
             patch_resp.status_code,
             patch_resp.content,
+        )
+
+
+class ShoppingListCollaborationTests(APITestCase):
+    def setUp(self) -> None:
+        self.factory = APIRequestFactory()
+        # create users
+        self.user1 = UserFactory()  # user with a shopping list
+        self.user2 = UserFactory()  # user that collabs on list belonging to user1
+        self.user3 = UserFactory()  # user that doesn't have a list shared with them.
+
+        # Create shopping list
+        self.shopping_list = ShoppingListFactory(owner=self.user1)
+        SharedWithFactory(shopping_list=self.shopping_list, shared_with=self.user2)
+
+    def test_fetch_shopping_list_user2_is_a_collaborator_on_returns_successful(self):
+        request = self.factory.get(SHOPPING_LIST_COLLECTION_ROUTE)
+        force_authenticate(request, self.user2)
+
+        resp = views.ShoppingCollectionView.as_view()(request)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.data) == 1
+
+    def test_empty_shopping_list_returned_for_user3(self):
+        request = self.factory.get(reverse(SHOPPING_LIST_COLLECTION_ROUTE))
+        force_authenticate(request, self.user3)
+
+        resp = views.ShoppingCollectionView.as_view()(request)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.data) == 0
+
+    def test_single_shopping_list_returned_for_user1_who_is_owner(self):
+        request = self.factory.get(reverse(SHOPPING_LIST_COLLECTION_ROUTE))
+        force_authenticate(request, self.user1)
+
+        resp = views.ShoppingCollectionView.as_view()(request)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.data) == 1
+
+    def test_user_cannot_fetch_shopping_list_they_do_not_own_or_share(self):
+        request = self.factory.get(reverse(SHOPPING_LIST_COLLECTION_ROUTE))
+        force_authenticate(request, self.user1)
+
+        resp = views.ShoppingCollectionView.as_view()(request)
+        shopping_list_id = resp.data[0]["id"]
+
+        request = self.factory.get(
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": shopping_list_id})
+        )
+        force_authenticate(request, self.user3)
+
+        resp = views.ShoppingListItemView.as_view()(request, pk=shopping_list_id)
+
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_when_user_who_is_collaborator_can_add_item_to_shopping_list(self):
+        request = self.factory.patch(
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": self.shopping_list.id}),
+            data={"shopping_items": [{"name": "user2-item"}]},
+        )
+        force_authenticate(request, self.user2)
+
+        resp = views.ShoppingListItemView.as_view()(request, pk=self.shopping_list.id)
+        resp.render()
+
+        assert resp.status_code == status.HTTP_200_OK, (
+            resp.status_code,
+            resp.content,
+        )
+
+    def test_when_user_who_is_not_collaborator_can_not_add_item_to_shopping_list(self):
+        request = self.factory.patch(
+            reverse(SHOPPING_LIST_ITEM_ROUTE, kwargs={"pk": self.shopping_list.id}),
+            data={"shopping_items": [{"name": "user2-item"}]},
+        )
+        force_authenticate(request, self.user3)
+
+        resp = views.ShoppingListItemView.as_view()(request, pk=self.shopping_list.id)
+        resp.render()
+
+        assert resp.status_code == status.HTTP_404_NOT_FOUND, (
+            resp.status_code,
+            resp.content,
+        )
+
+    def test_when_user_who_is_not_collaborator_can_not_empty_the_shopping_list(self):
+
+        request = self.factory.delete(
+            reverse(SHOPPING_LIST_ITEM_EMPTY, kwargs={"pk": self.shopping_list.id})
+        )
+        force_authenticate(request, self.user3)
+
+        resp = views.EmptyShoppingListView.as_view()(request, pk=self.shopping_list.id)
+        resp.render()
+
+        assert resp.status_code == status.HTTP_404_NOT_FOUND, (
+            resp.status_code,
+            resp.content,
+        )
+
+    def test_when_user_who_is_a_collaborator_can_not_empty_the_shopping_list(self):
+
+        request = self.factory.delete(
+            reverse(SHOPPING_LIST_ITEM_EMPTY, kwargs={"pk": self.shopping_list.id})
+        )
+        force_authenticate(request, self.user2)
+
+        resp = views.EmptyShoppingListView.as_view()(request, pk=self.shopping_list.id)
+        resp.render()
+
+        assert resp.status_code == status.HTTP_404_NOT_FOUND, (
+            resp.status_code,
+            resp.content,
+        )
+
+    def test_when_user_who_is_not_owner_of_shopping_list_attempts_to_delete_shopping_list_gets_rejected(
+        self,
+    ):
+        requests = self.factory.delete(
+            reverse(SHOPPING_LIST_ITEM_EMPTY, kwargs={"pk": self.shopping_list.id})
+        )
+        force_authenticate(requests, self.user3)
+
+        resp = views.ShoppingListItemView.as_view()(requests, pk=self.shopping_list.id)
+        resp.render()
+
+        assert resp.status_code == status.HTTP_404_NOT_FOUND, (
+            resp.status_code,
+            resp.content,
+        )
+
+    def test_when_user_who_is_a_collaborator_of_shopping_list_attempts_to_delete_shopping_list_gets_rejected(
+        self,
+    ):
+        requests = self.factory.delete(
+            reverse(SHOPPING_LIST_ITEM_EMPTY, kwargs={"pk": self.shopping_list.id})
+        )
+        force_authenticate(requests, self.user2)
+
+        resp = views.ShoppingListItemView.as_view()(requests, pk=self.shopping_list.id)
+        resp.render()
+
+        assert resp.status_code == status.HTTP_404_NOT_FOUND, (
+            resp.status_code,
+            resp.content,
         )
