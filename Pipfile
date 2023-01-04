@@ -13,6 +13,7 @@ drf-yasg = "*"
 django-eventstream = "*"
 channels = "~=3.0.0"
 channels-redis = '==4.0.0'
+dj-rest-auth = {version = "~=2.2.5", extras = ["with_social"]}
 
 [dev-packages]
 pre-commit = "2.20.0"
