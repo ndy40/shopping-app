@@ -49,8 +49,8 @@ THIRD_PARTY_APPS = [
     "channels",
     "django.contrib.sites",
     "allauth",
-    "allauth.account",
     "dj_rest_auth",
+    "allauth.account",
     "dj_rest_auth.registration",
 ]
 

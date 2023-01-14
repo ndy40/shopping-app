@@ -38,10 +38,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def get_cleaned_data(self):
         return {
-            "email": self.validated_data.get("username", ""),
+            "email": self.validated_data.get("email", ""),
             "password": self.validated_data.get("password", ""),
-            "first_name": self.validated_data.get("email", ""),
-            "last_name": self.validated_data.get("email", ""),
+            "first_name": self.validated_data.get("first_name", ""),
+            "last_name": self.validated_data.get("last_name", ""),
         }
 
     def save(self, request):
