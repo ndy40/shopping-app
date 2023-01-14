@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     "dj_rest_auth",
     "allauth.account",
     "dj_rest_auth.registration",
+    "rest_framework_simplejwt.token_blacklist",
 ]
 
 INSTALLED_APPS = (
@@ -159,7 +160,6 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
