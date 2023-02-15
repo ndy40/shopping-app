@@ -203,6 +203,8 @@ REST_AUTH = {
     "USE_JWT": True,
 }
 
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
 AUTHENTICATION_BACKEND = [
     "allauth.account.auth_backends.AuthenticationBackend",
     "django.contrib.auth.backends.ModelBackend",
