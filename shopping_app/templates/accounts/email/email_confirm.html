@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if data.0 == True %}
+ <p>Your email has been successfully verified. Proceed to login.
+    <button>Login</button>
+ </p>
+{% else %}
+    <p>{{ data.1  }}</p>
+{% endif %}
+</body>
+</html>

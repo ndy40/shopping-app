@@ -6,13 +6,14 @@ name = "pypi"
 [packages]
 django = "~=4.1"
 djangorestframework = "~=3.14.0"
-djangorestframework-simplejwt = {version = "~=5.2.2", extras = ["crypto"]}
-pygments = "*"
+pygments = "~=2.14.0"
 markdown = "*"
-drf-yasg = "*"
+drf-yasg = "~=1.21.5"
 django-eventstream = "*"
 channels = "~=3.0.0"
 channels-redis = '==4.0.0'
+requests = "*"
+dj-rest-auth = {version= "~=2.2.7", extras=["with_social"]}
 
 [dev-packages]
 pre-commit = "2.20.0"

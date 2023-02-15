@@ -9,5 +9,5 @@ class Command(BaseCommand):
         channel_layer = get_channel_layer()
 
         async_to_sync(channel_layer.group_send)(
-            "test", {"type": "shopping_evt", "data": 17}
+            "tests", {"type": "shopping_evt", "data": 17}
         )

@@ -30,6 +30,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+SITE_ID = 1
+
 
 # Application definition
 
@@ -42,8 +44,14 @@ LOCAL_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "drf_yasg",
     "channels",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
 ]
 
 INSTALLED_APPS = (
@@ -150,7 +158,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
@@ -173,3 +181,31 @@ CHANNEL_LAYERS = {
 DISABLE_SIGNALS = bool(os.environ.get("DISABLE_SIGNALS", 1))
 
 LOGGING = DEFAULT_LOGGING
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
+
+REST_USE_JWT = True
+
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+
+ACCOUNT_UNIQUE_EMAIL = True
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+
+REST_AUTH = {
+    "USE_JWT": True,
+}
+
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+AUTHENTICATION_BACKEND = [
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
