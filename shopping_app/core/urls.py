@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from accounts.views import confirm_email
 from django.contrib import admin
 from django.urls import include, path, re_path
@@ -47,11 +48,11 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    re_path(
-        r"^account-confirm-email/(?P<key>[-:\w]+)/$",
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("api/", include("api.urls", namespace="api")),
+    path(
+        "account-confirm-email/<key>/",
         confirm_email,
         name="account_confirm_email",
     ),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/", include("api.urls", namespace="api")),
 ]

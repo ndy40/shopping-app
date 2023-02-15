@@ -49,10 +49,9 @@ THIRD_PARTY_APPS = [
     "channels",
     "django.contrib.sites",
     "allauth",
-    "dj_rest_auth",
     "allauth.account",
+    "dj_rest_auth",
     "dj_rest_auth.registration",
-    "rest_framework_simplejwt.token_blacklist",
 ]
 
 INSTALLED_APPS = (
@@ -198,3 +197,13 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_UNIQUE_EMAIL = True
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+
+REST_AUTH = {
+    "USE_JWT": True,
+}
+
+AUTHENTICATION_BACKEND = [
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
