@@ -46,5 +46,4 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: 'core.settings.ci'
         run: |
-          cd shopping_app;
-          python manage.py test -d --failfast --timing --debug-mode
+          pipenv run python manage.py test -d --failfast --timing --debug-mode
