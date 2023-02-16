@@ -41,11 +41,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
-          pipenv install
       - name: Run unit and api tests
         env:
           DJANGO_SETTINGS_MODULE: 'core.settings.ci'
         run: |
-          pipenv shell;
+          pipenv install --dev
           cd shopping_app;
-          python manage.py test -d --failfast --timing --debug-mode
+          python manage.py test -d --failfast --timing
