@@ -14,6 +14,7 @@ channels = "~=3.0.0"
 channels-redis = '==4.0.0'
 requests = "*"
 dj-rest-auth = {version= "~=2.2.7", extras=["with_social"]}
+psycopg2-binary = "*"
 
 [dev-packages]
 pre-commit = "2.20.0"
