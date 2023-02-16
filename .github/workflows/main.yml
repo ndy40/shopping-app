@@ -13,21 +13,21 @@ jobs:
       matrix:
         python-version: [ '3.10' ]
 
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: shopping_app
-          # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
+#    services:
+#      postgres:
+#        image: postgres
+#        env:
+#          POSTGRES_PASSWORD: postgres
+#          POSTGRES_DB: shopping_app
+#          # Set health checks to wait until postgres has started
+#        options: >-
+#          --health-cmd pg_isready
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 5
+#        ports:
+#          # Maps tcp port 5432 on service container to the host
+#          - 5432:5432
 
     steps:
       - uses: actions/checkout@v3
@@ -45,6 +45,7 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: 'core.settings.ci'
         run: |
-          pipenv install --dev
+          pipenv install --dev;
+          pipenv shell;
           cd shopping_app;
           python manage.py test -d --failfast --timing
