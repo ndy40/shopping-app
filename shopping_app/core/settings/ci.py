@@ -1,4 +1,4 @@
-from .tests import *  # noqa:
+from .settings import *  # noqa  # noqa:
 
 DATABASES = {
     "default": {
@@ -10,3 +10,7 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
+ACCOUNT_EMAIL_VERIFICATION = None
