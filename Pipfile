@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django = "~=4.1"
 djangorestframework = "~=3.14.0"
+djangorestframework-simplejwt = {version = "~=5.2.2", extras = ["crypto"]}
 pygments = "~=2.14.0"
 markdown = "*"
 drf-yasg = "~=1.21.5"
