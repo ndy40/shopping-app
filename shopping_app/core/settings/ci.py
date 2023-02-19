@@ -1,4 +1,4 @@
-from .settings import *  # noqa  # noqa:
+from .settings import *  # noqa
 
 DATABASES = {
     "default": {
