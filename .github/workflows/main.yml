@@ -61,4 +61,4 @@ jobs:
           DJANGO_SETTINGS_MODULE: 'core.settings.ci'
         run: |
           cd shopping_app;
-          pipenv run python manage.py test -d --failfast --timing
+          pipenv run tox
